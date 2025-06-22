@@ -1,91 +1,97 @@
 <?php
-require 'config.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $fullname = trim($_POST['fullname'] ?? '');
-    $email = trim($_POST['email'] ?? '');
-    $password = $_POST['password'] ?? '';
-    $terms = isset($_POST['terms']);
+require_once "config.php";
+require_once "session.php";
 
-    // Allow only Gmail
-    if (!preg_match('/^[a-zA-Z0-9._%+-]+@gmail\.com$/', $email)) {
-        $error = "Only Gmail addresses are allowed.";
-    } elseif (!$fullname || !$email || !$password || !$terms) {
-        $error = "All fields are required.";
-    } else {
-        try {
-            $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
-            $stmt->execute([$email]);
-            if ($stmt->rowCount() > 0) {
-                $error = "This Gmail is already registered.";
-            } else {
-                $hashed = password_hash($password, PASSWORD_DEFAULT);
-                $stmt = $pdo->prepare("INSERT INTO users (fullname, email, password) VALUES (?, ?, ?)");
-                $stmt->execute([$fullname, $email, $hashed]);
-                $success = "Registration successful. <a href='login.php'>Login now</a>";
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
+
+    $fullname = trim($_POST['name']);
+    $email = trim($_POST['email']);
+    $password = trim($_POST['password']);
+    $confirm_password = trim($_POST["confirm_password"]);
+    $password_hash = password_hash($password, PASSWORD_BCRYPT);
+
+    if($query = $db->prepare("SELECT * FROM users WHERE email = ?")) {
+        $error = '';
+        // Bind parameters (s = string, i = int, b = blob, etc), in our case the username is a string so we use "s"
+	$query->bind_param('s', $email);
+	$query->execute();
+	// Store the result so we can check if the account exists in the database.
+	$query->store_result();
+        if ($query->num_rows > 0) {
+            $error .= '<p class="error">The email address is already registered!</p>';
+        } else {
+            // Validate password
+            if (strlen($password ) < 6) {
+                $error .= '<p class="error">Password must have atleast 6 characters.</p>';
             }
-        } catch (PDOException $e) {
-            $error = "Database error: " . $e->getMessage();
+
+            // Validate confirm password
+            if (empty($confirm_password)) {
+                $error .= '<p class="error">Please enter confirm password.</p>';
+            } else {
+                if (empty($error) && ($password != $confirm_password)) {
+                    $error .= '<p class="error">Password did not match.</p>';
+                }
+            }
+            if (empty($error) ) {
+                $insertQuery = $db->prepare("INSERT INTO users (name, email, password) VALUES (?, ?, ?);");
+                $insertQuery->bind_param("sss", $fullname, $email, $password_hash);
+                $result = $insertQuery->execute();
+                if ($result) {
+                    $error .= '<p class="success">Your registration was successful!</p>';
+                } else {
+                    $error .= '<p class="error">Something went wrong!</p>';
+                }
+            }
         }
     }
+    $query->close();
+    $insertQuery->close();
+    // Close DB connection
+    mysqli_close($db);
 }
 ?>
-
-<!-- HTML Form same as before with added error/success blocks -->
-
-
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>User Registration</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="bg-light">
-  <div class="container mt-5">
-    <div class="row justify-content-center">
-      <div class="col-md-6">
-        <div class="card shadow-sm">
-          <div class="card-header text-center">
-            <h3>Register</h3>
-          </div>
-          <div class="card-body">
-            <?php if (!empty($error)): ?>
-              <div class="alert alert-danger"><?= $error ?></div>
-            <?php elseif (!empty($success)): ?>
-              <div class="alert alert-success"><?= $success ?></div>
-            <?php endif; ?>
-            <form action="register.php" method="POST">
-              <div class="mb-3">
-                <label for="fullname" class="form-label">Full Name</label>
-                <input type="text" name="fullname" class="form-control" required>
-              </div>
-              <div class="mb-3">
-                <label for="email" class="form-label">Email address</label>
-                <input type="email" name="email" class="form-control" required>
-              </div>
-              <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" name="password" class="form-control" required>
-              </div>
-              <div class="form-check mb-3">
-                <input class="form-check-input" type="checkbox" name="terms" required>
-                <label class="form-check-label">
-                  I agree to the <a href="#">terms and conditions</a>
-                </label>
-              </div>
-              <div class="d-grid">
-                <button type="submit" class="btn btn-primary">Register</button>
-              </div>
-            </form>
-          </div>
-          <div class="card-footer text-center">
-            <p>Already have an account? <a href="login.php">Login here</a>.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <title>Sign Up</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h2>Register</h2>
+                    <p>Please fill this form to create an account.</p>
+                    <?php if (!empty($success)) { echo "<p class='success'>$success</p>"; } ?>
+                    <?php if (!empty($error)) { echo "<p class='error'>$error</p>"; } ?>
+
+                    <form action="" method="post">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" name="name" class="form-control" required>
+                        </div>    
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" name="email" class="form-control" required />
+                        </div>    
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" name="password" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Confirm Password</label>
+                            <input type="password" name="confirm_password" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" name="submit" class="btn btn-primary" value="Submit">
+                        </div>
+                        <p>Already have an account? <a href="login.php">Login here</a>.</p>
+                    </form>
+                </div>
+            </div>
+        </div>    
+    </body>
 </html>
