@@ -117,26 +117,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8" />
-<title>Login - ShasthoBondhu</title>
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" />
+    <meta charset="UTF-8" />
+    <title>Login - ShasthoBondhu</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" />
 </head>
+
 <body>
-<div class="container mt-5">
-    <h2>Login</h2>
-    <p>Please enter your email and password to log in.</p>
+    <section class="container mt-5 pt-5">
+        <div class="col-6 mx-auto card p-5">
+                     <h2 class="text-center text-success h1 font-times text-uppercase fw-bold"> <img src="assets/img/logo_bg.png" class="w-25 d-inline-block" alt="ShasthoBondhu Logo">Login</h2>
+            <p class="text-center text-info">Please enter your email and password to log in.</p>
 
-    <?php if (!empty($error) && !$show_lock_alert): ?>
-        <div class="alert alert-danger"><?= $error ?></div>
-    <?php endif; ?>
+            <?php if (!empty($error) && !$show_lock_alert): ?>
+            <div class="alert alert-danger"><?= $error ?></div>
+            <?php endif; ?>
 
-    <?php if ($show_lock_alert): ?>
-        <div class="alert alert-warning">
-            <strong>Your account is locked!</strong><br>
-            Try again in <span id="countdown"><?= (int)$remaining_seconds ?></span> seconds.
-        </div>
-        <script>
+            <?php if ($show_lock_alert): ?>
+            <div class="alert alert-warning">
+                <strong>Your account is locked!</strong><br>
+                Try again in <span id="countdown"><?= (int)$remaining_seconds ?></span> seconds.
+            </div>
+            <script>
             let seconds = <?= (int)$remaining_seconds ?>;
             const countdownEl = document.getElementById("countdown");
             const interval = setInterval(() => {
@@ -150,23 +153,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
                     countdownEl.innerText = seconds + " seconds";
                 }
             }, 1000);
-        </script>
-    <?php endif; ?>
+            </script>
+            <?php endif; ?>
+            <div class="col-12 ">
+                <form action="" method="post"
+                    <?= $show_lock_alert ? 'style="pointer-events: none; opacity: 0.5;"' : '' ?>>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" name="email" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" name="password" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" name="submit" class="btn btn-primary" value="Login" />
+                    </div>
+                    <p>Don't have an account? <a href="register.php">Register here</a>.</p>
+                </form>
+            </div>
 
-    <form action="" method="post" <?= $show_lock_alert ? 'style="pointer-events: none; opacity: 0.5;"' : '' ?>>
-        <div class="form-group">
-            <label>Email Address</label>
-            <input type="email" name="email" class="form-control" required />
-        </div>
-        <div class="form-group">
-            <label>Password</label>
-            <input type="password" name="password" class="form-control" required />
-        </div>
-        <div class="form-group">
-            <input type="submit" name="submit" class="btn btn-primary" value="Login" />
-        </div>
-        <p>Don't have an account? <a href="register.php">Register here</a>.</p>
-    </form>
-</div>
+    </section>
+
+
 </body>
+
 </html>

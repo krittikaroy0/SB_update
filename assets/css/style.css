@@ -5,8 +5,10 @@
     --light-color: #FEFBFC;
     --dark-color: #040404;
 }
-
-.container {
+.font-times {
+    font-family: 'Times New Roman', Times, serif;
+}
+.container{
     min-width: 360px;
 }
 .w-35{
