@@ -121,13 +121,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
 <head>
     <meta charset="UTF-8" />
     <title>Login - ShasthoBondhu</title>
+    <link rel="icon" href="assets/img/logo.png">
+    <!-- bootstrap css -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" />
+    <!-- default css -->
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
-<body>
+<body id="login">
     <section class="container mt-5 pt-5">
-        <div class="col-6 mx-auto card p-5">
-                     <h2 class="text-center text-success h1 font-times text-uppercase fw-bold"> <img src="assets/img/logo_bg.png" class="w-25 d-inline-block" alt="ShasthoBondhu Logo">Login</h2>
+        <div class="col-6  mx-auto pt-5 py-5 card bg-body-tertiary">
+            <h2 class="text-center text-success h1 font-times text-uppercase fw-bold"> <img src="assets/img/logo_bg.png"
+                    class="w-15 d-inline-block" alt="ShasthoBondhu Logo">Login</h2>
             <p class="text-center text-info">Please enter your email and password to log in.</p>
 
             <?php if (!empty($error) && !$show_lock_alert): ?>

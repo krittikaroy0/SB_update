@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <div class="col-md-6">
         <div class="card shadow-sm">
           <div class="card-header text-center">
-            <h3>Register</h3>
+             <h2 class="text-center text-success h1 font-times text-uppercase fw-bold"> <img src="assets/img/logo_bg.png" class="w-15 d-inline-block" alt="ShasthoBondhu Logo">Register</h2>
           </div>
           <div class="card-body">
             <?php if (!empty($error)): ?>

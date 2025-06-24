@@ -8,14 +8,20 @@ window.onscroll = () => {
     }
 };
 // navbar scroll background change code end
-function updateDateTime() {
-    const now = new Date();
-    const formatted = now.toLocaleString(); // You can customize format
-    document.getElementById('datetime').textContent = formatted;
-}
 
-updateDateTime(); // Initial call
-setInterval(updateDateTime, 1000); // Update every second
+// function updateDateTime() {
+//     const now = new Date();
+//     const formatted = now.toLocaleString(); // e.g., "6/23/2025, 3:45:12 PM"
+//     document.getElementById("datetime").textContent = formatted;
+// }
+
+// // Call once when page loads
+// updateDateTime();
+
+// // Optionally update every second
+// setInterval(updateDateTime, 1000);
+
+
 
 document.getElementById("emailForm").addEventListener("submit", function (e) {
     const emailInput = document.getElementById("inputEmail4").value.trim();
@@ -30,22 +36,22 @@ document.getElementById("emailForm").addEventListener("submit", function (e) {
     }
 });
 // search code
- const form = document.getElementById('searchForm');
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const query = document.getElementById('searchQuery').value;
+const form = document.getElementById('searchForm');
+form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    const query = document.getElementById('searchQuery').value;
 
-        fetch('search.php?q=' + encodeURIComponent(query))
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('results').innerHTML = data;
-            });
-    });
+    fetch('search.php?q=' + encodeURIComponent(query))
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('results').innerHTML = data;
+        });
+});
 
 
-  // Check URL params
-  const urlParams = new URLSearchParams(window.location.search);
-  if (urlParams.get('error') === 'upload_image') {
+// Check URL params
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.get('error') === 'upload_image') {
     const alertDiv = document.createElement('div');
     alertDiv.style.color = 'red';
     alertDiv.style.backgroundColor = '#ffe5e5';
@@ -57,8 +63,8 @@ document.getElementById("emailForm").addEventListener("submit", function (e) {
     // Insert alert at top of form container (change '#fc' if needed)
     const formContainer = document.getElementById('fc');
     if (formContainer) {
-      formContainer.insertBefore(alertDiv, formContainer.firstChild);
+        formContainer.insertBefore(alertDiv, formContainer.firstChild);
     }
-  }
+}
 // Remove error query param from URL without reloading
 window.history.replaceState({}, document.title, window.location.pathname);
