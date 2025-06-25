@@ -1,89 +1,80 @@
 <?php
-// DB connection
-$conn = new mysqli("localhost", "root", "", "sb");
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+session_start();
+require_once "config.php";
+require_once "session.php";
 
-// Get POST data safely
-$first_name = $_POST['first_name'] ?? '';
-$last_name = $_POST['last_name'] ?? '';
-$email = $_POST['email'] ?? '';
-$address = $_POST['address'] ?? '';
-$city = $_POST['city'] ?? '';
-$state = $_POST['state'] ?? '';
-$zip = $_POST['zip'] ?? '';
-$service = $_POST['service'] ?? '';
-$datetime = $_POST['datetime'] ?? '';
-$message = $_POST['message'] ?? '';
-$terms = isset($_POST['terms']) ? 1 : 0;
+// Check if form is submitted
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    // Sanitize input
+    $first_name = trim($_POST["first_name"]);
+    $last_name = trim($_POST["last_name"]);
+    $email = trim($_POST["email"]);
+    $address = trim($_POST["address"]);
+    $city = trim($_POST["city"]);
+    $state = trim($_POST["state"]);
+    $zip = trim($_POST["zip"]);
+    $department = trim($_POST["department"]);
+    $doctor = trim($_POST["doctor"]);
+    $service = trim($_POST["service"]);
+    $appointment_datetime = trim($_POST["appointment_datetime"]); // corrected to match input name
+    $message = trim($_POST["message"]);
 
-// Check for duplicate booking
-$check_sql = "SELECT * FROM appointments WHERE email = ? AND appointment_datetime = ? AND service = ?";
-$check_stmt = $conn->prepare($check_sql);
-$check_stmt->bind_param("sss", $email, $datetime, $service);
-$check_stmt->execute();
-$check_result = $check_stmt->get_result();
-
-if ($check_result->num_rows > 0) {
-    echo "<script>alert('You already have an appointment for this service at the same date and time.'); window.history.back();</script>";
-    $check_stmt->close();
-    $conn->close();
-    exit();
-}
-$check_stmt->close();
-
-// Image upload
-$imagePath = '';
-if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
-    $imageName = basename($_FILES['image']['name']);
-    $targetDir = "uploads/";
-    if (!is_dir($targetDir)) {
-        mkdir($targetDir, 0755, true);
+    // Validate required fields
+    if (
+        empty($first_name) || empty($last_name) || empty($email) || empty($service) ||
+        empty($appointment_datetime) || empty($doctor) || empty($department)
+    ) {
+        $_SESSION['error_msg'] = "All required fields must be filled out.";
+        header("Location: index.php");
+        exit();
     }
-    $imagePath = $targetDir . time() . "_" . $imageName;
-    move_uploaded_file($_FILES['image']['tmp_name'], $imagePath);
+
+    // Handle image upload
+    $image_name = '';
+    if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+        $image_tmp = $_FILES['image']['tmp_name'];
+        $image_name = time() . '_' . basename($_FILES['image']['name']);
+        $target_path = "uploads/" . $image_name;
+
+        if (!move_uploaded_file($image_tmp, $target_path)) {
+            $_SESSION['error_msg'] = "Failed to upload image.";
+            header("Location: index.php");
+            exit();
+        }
+    }
+
+    // Check for duplicate appointment (same email + service + date)
+    $check_stmt = $db->prepare("SELECT COUNT(*) FROM appointments WHERE email = ? AND service = ? AND DATE(appointment_datetime) = DATE(?)");
+    $check_stmt->bind_param("sss", $email, $service, $appointment_datetime);
+    $check_stmt->execute();
+    $check_stmt->bind_result($count);
+    $check_stmt->fetch();
+    $check_stmt->close();
+
+    if ($count > 0) {
+        $_SESSION['error_msg'] = "You have already booked this service on the selected date.";
+        header("Location: index.php");
+        exit();
+    }
+
+    // Insert appointment into database
+    $stmt = $db->prepare("INSERT INTO appointments (first_name, last_name, email, image, address, city, state, zip, department, doctor, service, appointment_datetime, message) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("sssssssssssss", $first_name, $last_name, $email, $image_name, $address, $city, $state, $zip, $department, $doctor, $service, $appointment_datetime, $message);
+
+    if ($stmt->execute()) {
+        // Save success message in session for dashboard display
+        $_SESSION['success_msg'] = "Thank you, " . htmlspecialchars($first_name) . " " . htmlspecialchars($last_name) . ". Your appointment for <strong>" . htmlspecialchars($service) . "</strong> with Dr. " . htmlspecialchars($doctor) . " on <strong>" . date("d M Y, h:i A", strtotime($appointment_datetime)) . "</strong> has been received.";
+    } else {
+        $_SESSION['error_msg'] = "Error saving appointment: " . $stmt->error;
+    }
+
+    $stmt->close();
+    $db->close();
+
+    header("Location: index.php");
+    exit();
 } else {
-    echo "<script>alert('Please upload your image.'); window.history.back();</script>";
-    $conn->close();
+    // If accessed directly, redirect to dashboard
+    header("Location: index.php");
     exit();
 }
-
-// Insert appointment
-$sql = "INSERT INTO appointments 
-    (first_name, last_name, email, address, city, state, zip, service, appointment_datetime, message, image_path, agreed_terms)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-$stmt = $conn->prepare($sql);
-if (!$stmt) {
-    echo "<script>alert('Prepare failed: " . addslashes($conn->error) . "'); window.history.back();</script>";
-    $conn->close();
-    exit();
-}
-
-$stmt->bind_param(
-    "sssssssssssi",
-    $first_name,
-    $last_name,
-    $email,
-    $address,
-    $city,
-    $state,
-    $zip,
-    $service,
-    $datetime,
-    $message,
-    $imagePath,
-    $terms
-);
-
-if ($stmt->execute()) {
-    echo "<script>alert('Appointment booked successfully!'); window.location.href='index.html';</script>";
-} else {
-    $error = addslashes($stmt->error);
-    echo "<script>alert('Error: $error'); window.history.back();</script>";
-}
-
-$stmt->close();
-$conn->close();
-?>

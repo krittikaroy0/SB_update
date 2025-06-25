@@ -64,7 +64,8 @@
     background: linear-gradient(rgba(0, 0, 0, .3), rgba(0, 0, 0, .3)), url(../img/image_6-997.jpg) no-repeat center;
     background-size: cover;
     /* height: 760px; */
-}
+} 
+
 
 #department .card {
     transition: all 0.3s ease;

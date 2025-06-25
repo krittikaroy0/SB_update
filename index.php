@@ -1,4 +1,37 @@
-<!doctype html>
+<?php
+// appointment.php
+require_once "session.php";
+
+// Department-wise doctors and services
+$hospital_data = [
+    "Cardiology" => [
+        "doctors" => ["Dr. Arif Rahman", "Dr. Maya Das"],
+        "services" => ["ECG", "Echocardiogram", "Angiography"]
+    ],
+    "Neurology" => [
+        "doctors" => ["Dr. Hossain Kabir"],
+        "services" => ["EEG", "Stroke Management", "Neuro Imaging"]
+    ],
+    "Pediatrics" => [
+        "doctors" => ["Dr. Rita Sultana", "Dr. Noman Akter"],
+        "services" => ["Child Vaccination", "Growth Monitoring"]
+    ],
+    "Orthopedics" => [
+        "doctors" => ["Dr. Amina Karim", "Dr. Jamal Uddin"],
+        "services" => ["Fracture Treatment", "Joint Replacement"]
+    ],
+    "Gynecology & Obstetrics" => [
+        "doctors" => ["Dr. Shabnam Noor"],
+        "services" => ["Prenatal Checkup", "Delivery", "Ultrasound"]
+    ],
+    "Dermatology" => [
+        "doctors" => ["Dr. Fahim Rahman"],
+        "services" => ["Skin Biopsy", "Allergy Test", "Laser Treatment"]
+    ],
+];
+$departments = array_keys($hospital_data);
+?>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -6,12 +39,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>ShasthoBondhu</title>
     <link rel="icon" href="assets/img/logo.png">
-    <!-- Bootstrap css -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- font awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <!-- default css -->
     <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+    #fc {
+        background: linear-gradient(135deg, #f3f9f8, #d6f0ed);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .appointment-card {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        margin-top: 40px;
+    }
+
+    .form-title img {
+        width: 40px;
+        height: 40px;
+        object-fit: contain;
+    }
+
+    .form-title h2 {
+        font-size: 1.8rem;
+    }
+
+    .btn-primary {
+        background-color: #198754;
+        border-color: #198754;
+    }
+
+    .btn-primary:hover,
+    .btn-primary:focus {
+        background-color: #146c43;
+        border-color: #146c43;
+    }
+
+    #preview {
+        max-height: 150px;
+        display: none;
+        border-radius: 8px;
+        margin-top: 10px;
+    }
+    </style>
 </head>
 
 <body>
@@ -39,7 +111,8 @@
                 <!-- Login / Registration -->
                 <div class="col-12 col-md-6 d-flex justify-content-center justify-content-md-end gap-4">
                     <a href="login.php" class="text-uppercase text-warning text-decoration-none fw-bold">Login</a>
-                    <a href="register.php" class="text-uppercase text-warning text-decoration-none fw-bold">Registration</a>
+                    <a href="register.php"
+                        class="text-uppercase text-warning text-decoration-none fw-bold">Registration</a>
                 </div>
             </div>
         </div>
@@ -160,167 +233,136 @@
     </section>
     <!-- about section end -->
     <!-- Service Section Start -->
-    <section id="service" class="py-5 bg-body-secondary">
+    <section id="service" class="py-5">
         <div class="container">
             <div class="row gy-4">
-                <!-- Service Items -->
-                <div class="col-lg-7 col-sm-12 order-sm-2">
+                <div class="col-lg-5 col-sm-12">
                     <h1 class="text-warning text-uppercase text-center mb-5 py-3"><u>Our Services</u></h1>
                     <div class="row g-4 pt-3">
-                        <div class="col-md-6">
-                            <div class="text-center">
-                                <i class="fa fa-truck-medical fa-5x mb-3 text-info"></i>
-                                <h4 class="h2 text-primary">Emergency Services</h4>
-                                <p class="fw-lighter">A small river named Duden flows by their place and supplies it
-                                    with the necessary
-                                    regelialia.</p>
-                            </div>
+                        <div class="col-md-6 text-center">
+                            <i class="fa fa-truck-medical fa-5x mb-3 text-info"></i>
+                            <h4 class="h2 text-primary">Emergency Services</h4>
+                            <p class="fw-lighter">Emergency care at your service 24/7.</p>
                         </div>
-                        <div class="col-md-6">
-                            <div class="text-center">
-                                <i class="fa fa-user-doctor fa-5x mb-3 text-info"></i>
-                                <h4 class="h2 text-primary">Qualified Doctors</h4>
-                                <p class="fw-lighter">A small river named Duden flows by their place and supplies it
-                                    with the necessary
-                                    regelialia.</p>
-                            </div>
+                        <div class="col-md-6 text-center">
+                            <i class="fa fa-user-doctor fa-5x mb-3 text-info"></i>
+                            <h4 class="h2 text-primary">Qualified Doctors</h4>
+                            <p class="fw-lighter">Highly skilled and certified professionals.</p>
                         </div>
-                        <div class="col-md-6">
-                            <div class="text-center">
-                                <i class="fa fa-stethoscope fa-5x mb-3 text-info"></i>
-                                <h4 class="h2 text-primary">Advanced Equipment</h4>
-                                <p class="fw-lighter">A small river named Duden flows by their place and supplies it
-                                    with the necessary
-                                    regelialia.</p>
-                            </div>
+                        <div class="col-md-6 text-center">
+                            <i class="fa fa-stethoscope fa-5x mb-3 text-info"></i>
+                            <h4 class="h2 text-primary">Advanced Equipment</h4>
+                            <p class="fw-lighter">State-of-the-art diagnostic and surgical tools.</p>
                         </div>
-                        <div class="col-md-6">
-                            <div class="text-center">
-                                <i class="fa fa-clock fa-5x mb-3 text-info"></i>
-                                <h4 class="h2 text-primary">24/7 Availability</h4>
-                                <p class="fw-lighter">A small river named Duden flows by their place and supplies it
-                                    with the necessary
-                                    regelialia.</p>
-                            </div>
+                        <div class="col-md-6 text-center">
+                            <i class="fa fa-clock fa-5x mb-3 text-info"></i>
+                            <h4 class="h2 text-primary">24/7 Availability</h4>
+                            <p class="fw-lighter">Healthcare around the clock.</p>
                         </div>
                     </div>
                 </div>
-                <!-- form Content start -->
-                <div id="fc" class="col-lg-5 col-sm-12 order-sm-2 card py-3">
-                    <h4 class="text-primary text-uppercase mb-4 text-center">Free Consultation</h4>
-                    <form class="row g-3 needs-validation" novalidate action="submit_appointment.php" method="POST"
-                        enctype="multipart/form-data">
-
-                        <div class="col-md-6">
-                            <label for="validationCustom01" class="form-label">First name</label>
-                            <input type="text" name="first_name" class="form-control" id="validationCustom01"
-                                placeholder="Enter your First name" required>
-                            <div class="valid-feedback">Looks good!</div>
+                <div class="col-lg-7">
+                    <div class="appointment-card">
+                        <div class="text-center mb-4 form-title">
+                            <h2 class="text-success fw-bold mb-2 h1 font-times">
+                                <img src="assets/img/logo_bg.png" alt="Logo" />
+                                Make an Appointment
+                            </h2>
+                            <h5 class="text-info">Free Health Consultation</h5>
                         </div>
-
-                        <div class="col-md-6">
-                            <label for="validationCustom02" class="form-label">Last name</label>
-                            <input type="text" name="last_name" class="form-control" id="validationCustom02"
-                                placeholder="Enter your Last name" required>
-                            <div class="valid-feedback">Looks good!</div>
-                        </div>
-
-                        <div id="emailForm" class="col-6">
-                            <label for="inputEmail4" class="form-label">Email</label>
-                            <input type="email" name="email" class="form-control" id="inputEmail4"
-                                placeholder="example@gmail.com" required>
-                            <div id="errorMsg" class="text-danger mt-2" style="display: none;">Please enter a valid
-                                Gmail address.</div>
-                        </div>
-
-                        <div class="col-6">
-                            <label for="inputGroupFile02" class="form-label">Upload Image</label>
-                            <input type="file" name="image" class="form-control" id="inputGroupFile02" accept="image/*"
-                                required>
-                            <img id="preview" src="#" alt="Image Preview" class="img-thumbnail mt-2"
-                                style="display: none; max-height: 200px;">
-                        </div>
-
-                        <div class="col-12">
-                            <label for="inputAddress" class="form-label">Address</label>
-                            <input type="text" name="address" class="form-control" id="inputAddress"
-                                placeholder="1234 Main St">
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="validationCustom03" class="form-label">City</label>
-                            <input type="text" name="city" class="form-control" id="validationCustom03" required>
-                            <div class="invalid-feedback">Please provide a valid city.</div>
-                        </div>
-
-                        <div class="col-3">
-                            <label for="validationCustom04" class="form-label">State</label>
-                            <select name="state" class="form-select" id="validationCustom04" required>
-                                <option selected disabled value="">Choose State</option>
-                                <option>Bangladesh</option>
-                                <option>USA</option>
-                                <option>UK</option>
-                                <option>India</option>
-                                <option>Pakistan</option>
-                            </select>
-                            <div class="invalid-feedback">Please select a valid state.</div>
-                        </div>
-
-                        <div class="col-3">
-                            <label for="zip" class="form-label">Zip</label>
-                            <input type="text" name="zip" class="form-control" id="zip" required>
-                            <div class="invalid-feedback">Please provide a valid zip.</div>
-                        </div>
-
-                        <div class="col-6">
-                            <label for="validationCustom06" class="form-label">Select Your Services</label>
-                            <select name="service" class="form-select" id="validationCustom06" required>
-                                <option selected disabled value="">Select Your Services</option>
-                                <option>Neurology</option>
-                                <option>Orthopedics</option>
-                                <option>Cardiology</option>
-                                <option>Pediatrics</option>
-                                <option>Gynecology & Obstetrics</option>
-                                <option>Dermatology</option>
-                                <option>Gastroenterology</option>
-                                <option>Pulmonology</option>
-                                <option>Oncology</option>
-                                <option>Urology</option>
-                                <option>Nephrology</option>
-                                <option>Ophthalmology</option>
-                            </select>
-                        </div>
-
-                        <div class="col-6">
-                            <label for="datetime" class="form-label">Date & Time</label>
-                            <input type="datetime-local" name="datetime" class="form-control" id="datetime" required>
-                        </div>
-
-                        <div class="col-12">
-                            <label for="exampleFormControlTextarea1" class="form-label">Message</label>
-                            <textarea name="message" class="form-control" id="exampleFormControlTextarea1" rows="3"
-                                placeholder="Describe Your Problem in Message......"></textarea>
-                        </div>
-
-                        <div class="col-12">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="terms" id="invalidCheck" required>
-                                <label class="form-check-label" for="invalidCheck">Agree to terms and conditions</label>
-                                <div class="invalid-feedback">You must agree before submitting.</div>
+                        <form class="row g-3 needs-validation" novalidate action="submit_appointment.php" method="POST"
+                            enctype="multipart/form-data">
+                            <div class="col-md-6">
+                                <label class="form-label">First Name *</label>
+                                <input type="text" name="first_name" class="form-control" required>
                             </div>
-                        </div>
-
-                        <div class="col-12 d-grid gap-2 col-6 mx-auto">
-                            <button class="btn btn-primary" type="submit">Make an appointment</button>
-                        </div>
-                    </form>
+                            <div class="col-md-6">
+                                <label class="form-label">Last Name *</label>
+                                <input type="text" name="last_name" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Email (Gmail only) *</label>
+                                <input type="email" name="email" class="form-control" required
+                                    pattern="[a-z0-9._%+-]+@gmail\\.com$">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Upload Image *</label>
+                                <input type="file" name="image" id="imageUpload" class="form-control" accept="image/*"
+                                    required>
+                                <img id="preview" class="img-thumbnail mt-2" style="display:none" alt="Preview">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Address</label>
+                                <input type="text" name="address" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">City *</label>
+                                <input type="text" name="city" class="form-control" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">State *</label>
+                                <select name="state" class="form-select" required>
+                                    <option selected disabled value="">Choose...</option>
+                                    <option>Bangladesh</option>
+                                    <option>USA</option>
+                                    <option>UK</option>
+                                    <option>India</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Zip *</label>
+                                <input type="text" name="zip" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Select Department *</label>
+                                <select name="department" id="departments" class="form-select" required>
+                                    <option selected disabled value="">Choose Department...</option>
+                                    <?php foreach ($departments as $dept => $docs): ?>
+                                    <option value="<?= htmlspecialchars($dept) ?>"><?= htmlspecialchars($dept) ?>
+                                    </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Select Doctor *</label>
+                                <select name="doctor" id="doctor" class="form-select" required>
+                                    <option selected disabled value="">Choose Doctor...</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Select Service *</label>
+                                <select name="service" class="form-select" required>
+                                    <option selected disabled value="">Choose service...</option>
+                                    <?php foreach ($services as $srv): ?>
+                                    <option value="<?= htmlspecialchars($srv) ?>"><?= htmlspecialchars($srv) ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Date & Time *</label>
+                                <input type="datetime-local" name="appointment_datetime" class="form-control" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Message</label>
+                                <textarea name="message" class="form-control" rows="3"></textarea>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="terms" required>
+                                    <label class="form-check-label">Agree to terms and conditions *</label>
+                                </div>
+                            </div>
+                            <div class="col-12 text-center">
+                                <button class="btn btn-primary" type="submit">Make Appointment</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-                <!-- form Content End -->
-
             </div>
         </div>
     </section>
     <!-- Service Section End -->
+
     <!-- search section start -->
     <section id="search" class="py-5 bg-light img-fluid">
         <section class="container">
@@ -659,7 +701,8 @@
                             <u>Customer Feedback</u>
                         </h2>
                     </div>
-                </div> <!--title end-->
+                </div>
+                <!--title end-->
                 <div class="col-sm-6  col-lg-4">
                     <div class="card border-light bg-light text-center">
                         <i class="fa fa-quote-left fa-3x card-img-top rounded-circle"></i>
@@ -706,7 +749,8 @@
                         <h2 class="h1 text-uppercase playfair-display color-primary fw-bold text-warning mb-4"><u>Our
                                 Gallery</u></h2>
                     </div>
-                </div> <!--title end-->
+                </div>
+                <!--title end-->
                 <div class="col-6 col-lg-4">
                     <div class="gallery-poster">
                         <img src="assets/img/image_2-434.jpg" alt="music gallery" title="music gallery"
@@ -765,6 +809,64 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
     <!-- default js -->
     <script src="assets/js/script.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+    document.getElementById("imageUpload").addEventListener("change", function() {
+        const file = this.files[0];
+        const preview = document.getElementById("preview");
+        if (file) {
+            preview.src = URL.createObjectURL(file);
+            preview.style.display = "block";
+        } else {
+            preview.src = "";
+            preview.style.display = "none";
+        }
+    });
+    const departments = <?= json_encode($departments, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
+    const departmentSelect = document.getElementById("departments");
+    const doctorSelect = document.getElementById("doctor");
+    departmentSelect.addEventListener("change", function() {
+        const selectedDept = this.value;
+        doctorSelect.innerHTML = '<option selected disabled value="">Choose Doctor...</option>';
+        if (selectedDept && departments[selectedDept]) {
+            departments[selectedDept].forEach(function(doctor) {
+                const option = document.createElement("option");
+                option.value = doctor;
+                option.textContent = doctor;
+                doctorSelect.appendChild(option);
+            });
+            doctorSelect.disabled = false;
+        } else {
+            doctorSelect.disabled = true;
+        }
+    });
+    doctorSelect.disabled = true;
+    (() => {
+        'use strict';
+        const forms = document.querySelectorAll('.needs-validation');
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                const emailInput = form.querySelector('input[name="email"]');
+                const gmailPattern = /^[a-z0-9._%+-]+@gmail\.com$/i;
+                if (!gmailPattern.test(emailInput.value)) {
+                    emailInput.classList.add('is-invalid');
+                    event.preventDefault();
+                    event.stopPropagation();
+                    return;
+                } else {
+                    emailInput.classList.remove('is-invalid');
+                }
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+    </script>
 </body>
 
 </html>
