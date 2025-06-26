@@ -89,8 +89,13 @@ $departments = array_keys($hospital_data);
 <body>
     <!-- Header section start -->
     <header id="header" class="img-fluid">
+           <div class="container col-12 p-0">
+            <marquee behavior="scroll" direction="left">
+                <p class="text-danger">⚠️ এই ব্যবহারকারী ড্যাশবোর্ডটি এখনও নির্মাণাধীন রয়েছে। বর্তমানে কাজ চলমান রয়েছে।</p>
+            </marquee>
+        </div>
         <!-- nav 1 section start -->
-        <div class="container-fluid bg-transparent py-2">
+        <div class="container bg-transparent ">
             <div class="row align-items-center text-center text-md-start gy-3">
                 <!-- Call Us -->
                 <div class="col-12 col-md-3">
@@ -117,9 +122,10 @@ $departments = array_keys($hospital_data);
             </div>
         </div>
         <!-- nav 1 section end -->
+       
         <!-- nav section start -->
-        <nav id="navbar" class="navbar navbar-expand-lg pt-3">
-            <a class="navbar-brand ms-5" href="index.html">
+        <nav id="navbar" class="navbar navbar-expand-lg  sticky-top ">
+            <a class="navbar-brand ms-5" href="index.php">
                 <img src="assets/img/logo_bg.png" class="w-35 d-block img-fluid" alt="ShasthoBondhu Logo"></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -129,7 +135,7 @@ $departments = array_keys($hospital_data);
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0 px-3">
                     <li class="nav-item">
-                        <a class="nav-link active fs-5" aria-current="page" href="index.html">Home</a>
+                        <a class="nav-link active fs-5" aria-current="page" href="index.php">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link fs-5" href="#about">About</a>
@@ -261,7 +267,7 @@ $departments = array_keys($hospital_data);
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-7">
+                <div id="fc" class="col-lg-7">
                     <div class="appointment-card">
                         <div class="text-center mb-4 form-title">
                             <h2 class="text-success fw-bold mb-2 h1 font-times">

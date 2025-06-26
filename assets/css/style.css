@@ -21,8 +21,8 @@
 #header {
     background: linear-gradient(rgba(0, 0, 0, .3), rgba(0, 0, 0, .3)), url(../img/bg_3-440.jpg) no-repeat center;
     background-size: cover;
-    height: 955px;
-}
+    /* height: 955px;*/
+} 
 #login {
     background: linear-gradient(rgba(0, 0, 0, .3), rgba(0, 0, 0, .3)), url(../img/image_4-406.jpg) no-repeat center;
     background-size: cover;

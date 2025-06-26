@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 18, 2025 at 10:26 AM
+-- Generation Time: Jun 26, 2025 at 08:12 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -29,18 +29,19 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `appointments` (
   `id` int(11) NOT NULL,
-  `first_name` varchar(100) DEFAULT NULL,
-  `last_name` varchar(100) DEFAULT NULL,
-  `email` varchar(150) DEFAULT NULL,
-  `address` text DEFAULT NULL,
-  `city` varchar(100) DEFAULT NULL,
-  `state` varchar(100) DEFAULT NULL,
-  `zip` varchar(20) DEFAULT NULL,
-  `service` varchar(100) DEFAULT NULL,
-  `appointment_datetime` datetime DEFAULT NULL,
+  `first_name` varchar(100) NOT NULL,
+  `last_name` varchar(100) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `image` varchar(255) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `city` varchar(100) NOT NULL,
+  `state` varchar(100) NOT NULL,
+  `zip` varchar(20) NOT NULL,
+  `department` varchar(100) DEFAULT NULL,
+  `doctor` varchar(100) DEFAULT NULL,
+  `service` varchar(100) NOT NULL,
+  `appointment_datetime` datetime NOT NULL,
   `message` text DEFAULT NULL,
-  `image_path` varchar(255) DEFAULT NULL,
-  `agreed_terms` tinyint(1) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -48,9 +49,11 @@ CREATE TABLE `appointments` (
 -- Dumping data for table `appointments`
 --
 
-INSERT INTO `appointments` (`id`, `first_name`, `last_name`, `email`, `address`, `city`, `state`, `zip`, `service`, `appointment_datetime`, `message`, `image_path`, `agreed_terms`, `created_at`) VALUES
-(1, 'krittika', 'roy', 'k2001roy@gmail.com', '81/A old dhaka', 'dhaka', 'Bangladesh', '1100', 'Neurology', '2025-06-18 13:40:00', 'neurological ptoblem', 'uploads/1750232604_doc-3-29.jpg', 1, '2025-06-18 07:43:24'),
-(4, 'krittika', 'roy', 'k2001roy@gmail.com', '81/A old dhaka', 'dhaka', '', '1100', 'Cardiology', '2025-06-18 13:59:00', 'neurological ptoblem', 'uploads/1750233567_doc-3-29.jpg', 1, '2025-06-18 07:59:27');
+INSERT INTO `appointments` (`id`, `first_name`, `last_name`, `email`, `image`, `address`, `city`, `state`, `zip`, `department`, `doctor`, `service`, `appointment_datetime`, `message`, `created_at`) VALUES
+(1, 'krittika', 'roy', 'k2001roy@gmail.com', 'uploads/img_685a6be4403865.67268093.jpg', '81/A old dhaka', 'dhaka', 'Bangladesh', '1100', 'Cardiology', 'Dr. Arif Rahman', 'Cardiology', '2025-06-24 15:11:00', 'ok', '2025-06-24 09:12:04'),
+(2, 'Aparupa', 'Roy', 'aparuparoy@gmail.com', '1750757596_doc-4-439.jpg', '81/A old dhaka', 'dhaka', 'USA', '1100', 'Cardiology', 'Dr. Arif Rahman', 'Oncology', '2025-06-24 15:33:00', 'ok', '2025-06-24 09:33:16'),
+(3, 'krittika', 'roy', 'k2001roy@gmail.com', '1750830753_doc-3-29.jpg', '81/A old dhaka', 'dhaka', 'Bangladesh', '1100', 'Cardiology', 'Dr. Arif Rahman', 'Neurology', '2025-06-25 11:52:00', 'ok', '2025-06-25 05:52:33'),
+(4, 'krittika', 'roy', 'k2001roy@gmail.com', '1750831280_doc-2-107.jpg', '81/A old dhaka', 'dhaka', 'Bangladesh', '1100', 'Cardiology', 'Dr. Arif Rahman', 'ECG', '2025-06-25 12:01:00', 'ok', '2025-06-25 06:01:20');
 
 -- --------------------------------------------------------
 
@@ -75,6 +78,32 @@ INSERT INTO `messages` (`id`, `full_name`, `email`, `address`, `comment`, `creat
 (1, 'krittika Roy', 'k2001roy@gmail.com', '81/A old dhaka', '1wtgnfd', '2025-06-18 08:08:42'),
 (2, 'krittika Roy', 'k2001roy@gmail.com', '81/A old dhaka', '1223', '2025-06-18 08:16:37');
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `name` varchar(75) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `login_attempts` int(11) DEFAULT 0,
+  `last_attempt` datetime DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `name`, `password`, `email`, `login_attempts`, `last_attempt`, `image`, `created_at`) VALUES
+(1, 'krittika Roy', '$2y$10$x3l0b3LVmx6YdIy.ZDZks.55mbIxSfy6PJEz7NGAbbWfalJmrNDBu', 'k2001roy@gmail.com', 0, NULL, NULL, '2025-06-24 07:20:11'),
+(2, 'krittika Roy', '$2y$10$EMqpSNligGi44/00e4xR3eDq6loO5fYPRfPzM3ZeSPa2JrlRXeJq.', 'krittikaroy2020@gmail.com', 0, NULL, NULL, '2025-06-24 07:20:11'),
+(3, 'Aparupa Roy', '$2y$10$HWUUcTdUY6Mq2SokxVl/vurQsM0Rq5cTHTv4x6x5iCpf6TEIInEXC', 'aparuparoy@gmail.com', 0, NULL, 'doc-4-439.jpg', '2025-06-24 07:24:44');
+
 --
 -- Indexes for dumped tables
 --
@@ -92,6 +121,13 @@ ALTER TABLE `messages`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique_email` (`email`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -106,6 +142,12 @@ ALTER TABLE `appointments`
 --
 ALTER TABLE `messages`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
