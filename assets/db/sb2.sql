@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 03, 2025 at 08:50 AM
+-- Generation Time: Jun 26, 2025 at 08:12 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,25 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `sb`
 --
-
--- --------------------------------------------------------
-
---
--- Table structure for table `admin`
---
-
-CREATE TABLE `admin` (
-  `id` int(11) NOT NULL,
-  `email` varchar(100) NOT NULL,
-  `password` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `admin`
---
-
-INSERT INTO `admin` (`id`, `email`, `password`) VALUES
-(1, 'k2001roy@gmail.com', '$2y$10$GJy.u/wn4otLaYLqSybXQuaFpLVWUi.DE/7j/PQnWJ6bIiC6gXGMO');
 
 -- --------------------------------------------------------
 
@@ -73,19 +54,6 @@ INSERT INTO `appointments` (`id`, `first_name`, `last_name`, `email`, `image`, `
 (2, 'Aparupa', 'Roy', 'aparuparoy@gmail.com', '1750757596_doc-4-439.jpg', '81/A old dhaka', 'dhaka', 'USA', '1100', 'Cardiology', 'Dr. Arif Rahman', 'Oncology', '2025-06-24 15:33:00', 'ok', '2025-06-24 09:33:16'),
 (3, 'krittika', 'roy', 'k2001roy@gmail.com', '1750830753_doc-3-29.jpg', '81/A old dhaka', 'dhaka', 'Bangladesh', '1100', 'Cardiology', 'Dr. Arif Rahman', 'Neurology', '2025-06-25 11:52:00', 'ok', '2025-06-25 05:52:33'),
 (4, 'krittika', 'roy', 'k2001roy@gmail.com', '1750831280_doc-2-107.jpg', '81/A old dhaka', 'dhaka', 'Bangladesh', '1100', 'Cardiology', 'Dr. Arif Rahman', 'ECG', '2025-06-25 12:01:00', 'ok', '2025-06-25 06:01:20');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `doctors`
---
-
-CREATE TABLE `doctors` (
-  `id` int(11) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `specialization` varchar(100) DEFAULT NULL,
-  `email` varchar(100) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -141,22 +109,9 @@ INSERT INTO `users` (`id`, `name`, `password`, `email`, `login_attempts`, `last_
 --
 
 --
--- Indexes for table `admin`
---
-ALTER TABLE `admin`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `email` (`email`);
-
---
 -- Indexes for table `appointments`
 --
 ALTER TABLE `appointments`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `doctors`
---
-ALTER TABLE `doctors`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -177,22 +132,10 @@ ALTER TABLE `users`
 --
 
 --
--- AUTO_INCREMENT for table `admin`
---
-ALTER TABLE `admin`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
 -- AUTO_INCREMENT for table `appointments`
 --
 ALTER TABLE `appointments`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT for table `doctors`
---
-ALTER TABLE `doctors`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `messages`
